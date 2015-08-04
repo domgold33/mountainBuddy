@@ -3,6 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <TabHost
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,28 +27,24 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:id="@+id/tab_my_routes"
+                    android:id="@+id/tab1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
+                    <ListView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@android:id/list" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/tab_all_routes"
+                    android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"></LinearLayout>
 
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@android:id/list"
-                    android:focusable="false"
-                    android:layout_gravity="center_horizontal" />
-
             </FrameLayout>
         </LinearLayout>
-
     </TabHost>
-
 </RelativeLayout>

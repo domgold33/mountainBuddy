@@ -34,7 +34,7 @@
             android:text="Start"
             android:id="@+id/button_start"
             android:layout_weight="3"
-            android:background="#ff97ff87"
+            android:background="@color/color_green"
             android:textColor="@color/color_white" />
 
         <ImageButton
