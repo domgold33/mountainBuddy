@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="@color/color_white"
+    android:weightSum="16">
+
+
+    <ImageButton
+        android:layout_width="90dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="15dp"
+        android:id="@+id/imageButton"
+        android:layout_gravity="center_vertical"
+        android:focusable="false"
+        android:layout_weight="4"/>
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="70dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/list_item_title"
+        android:layout_marginLeft="5dp"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_weight="4"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="4.0">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginTop="15dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Distance"
+            android:id="@+id/list_item_info_distance"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center" />
+
+        <RatingBar
+            android:id="@+id/list_item_rating"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:stepSize="0.1"
+            android:layout_gravity="center_horizontal"
+            android:focusable="false"
+            android:layout_marginTop="5dp" />
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/list_item_download_icon"
+        android:focusable="false"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="3"/>
+
+</LinearLayout>
