@@ -5,8 +5,7 @@
     android:divider="@android:color/transparent" android:dividerHeight="20dp"
     android:background="@color/color_dark_grey" tools:context=".NavigationDrawerFragment"
     android:id="@+id/main_navigation_drawer"
-    android:listSelector="@color/color_white"
+    android:listSelector="@color/color_green"
 
     android:headerDividersEnabled="false"
-    android:paddingStart="5dp"
     android:paddingTop="20dp" />
