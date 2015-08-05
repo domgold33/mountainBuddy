@@ -11,6 +11,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.proto.buddy.mountainbuddyv2.R;
@@ -133,8 +134,9 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(this.getActivity().getApplicationContext(),"Should work", Toast.LENGTH_LONG).show();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, RouteFragment.newInstance())
+                .replace(R.id.container, RouteItemFragment.newInstance())
                 .commit();
     }
 

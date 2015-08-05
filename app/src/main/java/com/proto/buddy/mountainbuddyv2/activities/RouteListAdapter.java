@@ -98,4 +98,10 @@ public class RouteListAdapter<U> extends BaseAdapter {
         this.notifyDataSetChanged();
     }
 
+    @Override
+    public boolean isEnabled(int position)
+    {
+        return true;
+    }
+
 }
