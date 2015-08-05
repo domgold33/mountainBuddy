@@ -53,20 +53,21 @@ public class mainActivity extends ActionBarActivity
         switch (position) {
             case 0:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, MainFragment.newInstance(position + 1))
+                        .replace(R.id.container, MainFragment.newInstance(position + 1)).addToBackStack("Drawer_to_Start")
                         .commit();
                 break;
             case 1:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, CreateRouteFragment.newInstance())
+                        .replace(R.id.container, CreateRouteFragment.newInstance()).addToBackStack("Drawer_to_Create_Route")
                         .commit();
                 break;
             case 2:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, RouteFragment.newInstance())
+                        .replace(R.id.container, RouteFragment.newInstance()).addToBackStack("Drawer_to_List")
                         .commit();
                 break;
         }
+
 
     }
 
@@ -91,6 +92,13 @@ public class mainActivity extends ActionBarActivity
         actionBar.setTitle(mTitle);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        this.onSectionAttached(1);
+        restoreActionBar();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

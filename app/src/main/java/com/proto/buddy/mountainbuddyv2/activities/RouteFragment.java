@@ -126,6 +126,8 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
         }
     }
 
+
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -136,7 +138,7 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(this.getActivity().getApplicationContext(),"Should work", Toast.LENGTH_LONG).show();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, RouteItemFragment.newInstance())
+                .replace(R.id.container, RouteItemFragment.newInstance()).addToBackStack("List_to_Item")
                 .commit();
     }
 
