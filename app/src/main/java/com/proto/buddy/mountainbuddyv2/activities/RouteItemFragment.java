@@ -61,6 +61,7 @@ public class RouteItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_route_item, container, false);
+        setHasOptionsMenu(true);
         return rootView;
     }
 
@@ -75,6 +76,7 @@ public class RouteItemFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
+
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
