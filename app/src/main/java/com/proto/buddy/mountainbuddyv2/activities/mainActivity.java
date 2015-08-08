@@ -91,7 +91,6 @@ public class mainActivity extends ActionBarActivity
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-        actionBar.setCustomView(R.layout.abs_layout);
     }
 
     @Override

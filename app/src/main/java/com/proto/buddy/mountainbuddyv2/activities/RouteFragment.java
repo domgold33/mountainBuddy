@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +51,9 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
     /**
      * The fragment's ListView/GridView.
      */
-    private AbsListView mListView;
+    private AbsListView mListView_all;
+
+    private AbsListView mListView_my;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -97,6 +101,9 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
         // initiate the listadapter
         mAdapter = new RouteListAdapter<String>(this.getActivity().getApplicationContext(), routes);
         // assign the list adapter
+
+
+
     }
 
     @Override
@@ -105,11 +112,19 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
         View view = inflater.inflate(R.layout.fragment_choose_route, container, false);
 
         // Set the adapter
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mListView_all = (AbsListView) view.findViewById(R.id.list_all_routes);
+        ((AdapterView<ListAdapter>) mListView_all).setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
-        mListView.setOnItemClickListener(this);
+        mListView_all.setOnItemClickListener(this);
+
+
+        // Set the adapter
+        mListView_my = (AbsListView) view.findViewById(R.id.list_my_routes);
+        ((AdapterView<ListAdapter>) mListView_my).setAdapter(mAdapter);
+
+        // Set OnItemClickListener so we can be notified on item clicks
+        mListView_my.setOnItemClickListener(this);
 
         return view;
     }
@@ -136,24 +151,12 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this.getActivity().getApplicationContext(),"Should work", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this.getActivity().getApplicationContext(),"Should work", Toast.LENGTH_LONG).show();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, RouteItemFragment.newInstance()).addToBackStack("List_to_Item")
                 .commit();
     }
-
-    /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyView instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
+    
 
     /**
      * This interface must be implemented by activities that contain this
@@ -170,4 +173,20 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
         public void onFragmentInteraction(String id);
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        TabHost tabhost = (TabHost) getActivity().findViewById(R.id.myTabHost);
+        tabhost.setup();
+        TabHost.TabSpec ts = tabhost.newTabSpec("tag1");
+        ts.setContent(R.id.tab1);
+        ts.setIndicator("Alle Routen");
+        tabhost.addTab(ts);
+        ts = tabhost.newTabSpec("tag2");
+        ts.setContent(R.id.tab2);
+        ts.setIndicator("Meine Routen");
+        tabhost.addTab(ts);
+
+    }
 }

@@ -7,7 +7,7 @@
     <TabHost
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/tabHost"
+        android:id="@+id/myTabHost"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true">
 
@@ -17,7 +17,7 @@
             android:orientation="vertical">
 
             <TabWidget
-                android:id="@+id/tabs"
+                android:id="@android:id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></TabWidget>
 
@@ -35,7 +35,8 @@
                     <ListView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@android:id/list" />
+                        android:id="@+id/list_all_routes" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -43,6 +44,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"></LinearLayout>
+
+                   <ListView
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:id="@+id/list_my_routes"/>
+                >
 
             </FrameLayout>
         </LinearLayout>
