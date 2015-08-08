@@ -73,12 +73,13 @@ public class RouteListAdapterAllRoutes<U> extends BaseAdapter {
         ViewHolder holder;
 
         if(convertView == null){
-            convertView = mInflater.inflate(R.layout.row_layout, null);
+            convertView = mInflater.inflate(R.layout.row_layout, parent, false);
 
             holder = new ViewHolder();
             holder.title = (TextView) convertView.findViewById(R.id.list_item_title);
 
             convertView.setTag(holder);
+
 
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -98,10 +99,5 @@ public class RouteListAdapterAllRoutes<U> extends BaseAdapter {
         this.notifyDataSetChanged();
     }
 
-    @Override
-    public boolean isEnabled(int position)
-    {
-        return true;
-    }
 
 }

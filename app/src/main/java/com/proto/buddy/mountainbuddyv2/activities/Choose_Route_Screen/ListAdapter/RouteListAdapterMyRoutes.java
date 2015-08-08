@@ -72,7 +72,7 @@ public class RouteListAdapterMyRoutes<U> extends BaseAdapter {
         ViewHolder holder;
 
         if(convertView == null){
-            convertView = mInflater.inflate(R.layout.row_layout, null);
+            convertView = mInflater.inflate(R.layout.row_layout, parent, false);
 
             holder = new ViewHolder();
             holder.title = (TextView) convertView.findViewById(R.id.list_item_title);

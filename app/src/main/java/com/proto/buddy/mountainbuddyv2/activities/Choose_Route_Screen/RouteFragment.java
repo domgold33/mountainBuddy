@@ -11,6 +11,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 
 import com.proto.buddy.mountainbuddyv2.R;
@@ -108,7 +109,7 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
 
         // Set the adapter
         mListView_all = (AbsListView) view.findViewById(R.id.list_all_routes);
-        ((AdapterView<ListAdapter>) mListView_all).setAdapter(mAdapter_all);
+        mListView_all.setAdapter(mAdapter_all);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView_all.setOnItemClickListener(this);
@@ -116,7 +117,7 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
 
         // Set the adapter
         mListView_my = (AbsListView) view.findViewById(R.id.list_my_routes);
-        ((AdapterView<ListAdapter>) mListView_my).setAdapter(mAdapter_my);
+        mListView_my.setAdapter(mAdapter_my);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView_my.setOnItemClickListener(this);
@@ -150,7 +151,7 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //Toast.makeText(this.getActivity().getApplicationContext(),"Should work", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this.getActivity().getApplicationContext(), "Should work", Toast.LENGTH_LONG).show();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, RouteItemFragment.newInstance()).addToBackStack("List_to_Item")
                 .commit();
