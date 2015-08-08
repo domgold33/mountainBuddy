@@ -14,6 +14,7 @@ import android.widget.TabHost;
 
 
 import com.proto.buddy.mountainbuddyv2.R;
+import com.proto.buddy.mountainbuddyv2.RouteManager;
 import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.ListAdapter.RouteListAdapterAllRoutes;
 import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.ListAdapter.RouteListAdapterMyRoutes;
 import com.proto.buddy.mountainbuddyv2.activities.Route_Item_Screen.RouteItemFragment;
@@ -45,7 +46,7 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
 
     private DatabaseHelper db;
 
-    private ArrayList<Route> routes;
+    private mainActivity mainActivity;
 
     private OnFragmentInteractionListener mListener;
 
@@ -63,6 +64,8 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
     private ListAdapter mAdapter_all;
 
     private ListAdapter mAdapter_my;
+
+    private RouteManager routeManager;
 
 
     private FragmentManager fragmentManager;
@@ -88,24 +91,11 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
 
         fragmentManager = this.getActivity().getSupportFragmentManager();
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-        // TODO: Change Adapter to display your content
-        db = new DatabaseHelper(this.getActivity().getApplicationContext());
-        db.getWritableDatabase();
-
-        db.getAllRoutes();
-        DatabaseHelper dbHelper = new DatabaseHelper(this.getActivity().getApplicationContext());
-        routes = dbHelper.getAllRoutes();
-
         // initiate the listadapter
-        mAdapter_all = new RouteListAdapterAllRoutes<String>(this.getActivity().getApplicationContext(), routes);
+        mAdapter_all = new RouteListAdapterAllRoutes<String>(this.getActivity().getApplicationContext(), routeManager.getAllRoutes());
 
         // assign the list adapter
-        mAdapter_my = new RouteListAdapterMyRoutes<String>(this.getActivity().getApplicationContext(), routes);
+        mAdapter_my = new RouteListAdapterMyRoutes<String>(this.getActivity().getApplicationContext(), routeManager.getMyRoutes());
 
 
 
@@ -137,7 +127,10 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((mainActivity) activity).onSectionAttached(3);
+
+        mainActivity = ((mainActivity) activity);
+        mainActivity.onSectionAttached(3);
+        routeManager = mainActivity.getRouteManager();
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
@@ -152,6 +145,7 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mainActivity.setRouteManager(this.routeManager);
     }
 
     @Override

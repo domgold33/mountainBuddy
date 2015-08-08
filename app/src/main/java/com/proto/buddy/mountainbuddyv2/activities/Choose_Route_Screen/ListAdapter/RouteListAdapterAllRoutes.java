@@ -84,7 +84,7 @@ public class RouteListAdapterAllRoutes<U> extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.title.setText(data.get(position).getName());
+        holder.title.setText(data.get(position).getDescription());
 
         return convertView;
     }
