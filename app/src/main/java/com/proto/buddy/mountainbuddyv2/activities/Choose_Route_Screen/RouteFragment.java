@@ -34,7 +34,7 @@ import java.util.ArrayList;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class RouteFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class RouteFragment extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -112,7 +112,17 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
         mListView_all.setAdapter(mAdapter_all);
 
         // Set OnItemClickListener so we can be notified on item clicks
-        mListView_all.setOnItemClickListener(this);
+        mListView_all.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                routeManager.setCurrent((Route) mAdapter_all.getItem(position));
+
+                mainActivity.setRouteManager(routeManager);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, RouteItemFragment.newInstance()).addToBackStack("List_to_Item")
+                        .commit();
+            }
+        });
 
 
         // Set the adapter
@@ -120,7 +130,15 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
         mListView_my.setAdapter(mAdapter_my);
 
         // Set OnItemClickListener so we can be notified on item clicks
-        mListView_my.setOnItemClickListener(this);
+        mListView_my.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                routeManager.setCurrent((Route) mAdapter_my.getItem(position));
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, RouteItemFragment.newInstance()).addToBackStack("List_to_Item")
+                        .commit();
+            }
+        });
 
         return view;
     }
@@ -147,14 +165,6 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
         super.onDetach();
         mListener = null;
         mainActivity.setRouteManager(this.routeManager);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //Toast.makeText(this.getActivity().getApplicationContext(), "Should work", Toast.LENGTH_LONG).show();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, RouteItemFragment.newInstance()).addToBackStack("List_to_Item")
-                .commit();
     }
 
 

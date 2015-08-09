@@ -16,6 +16,8 @@ public class RouteManager {
 
     private ArrayList<Route> myRoutes;
 
+    private Route current;
+
     private DatabaseHelper db;
 
     public RouteManager(Context context) {
@@ -31,6 +33,16 @@ public class RouteManager {
             myRoutes.add(allRoutes.get(i));
         }
 
+        current = null;
+
+    }
+
+    public Route getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Route current) {
+        this.current = current;
     }
 
     public ArrayList<Route> getAllRoutes() {

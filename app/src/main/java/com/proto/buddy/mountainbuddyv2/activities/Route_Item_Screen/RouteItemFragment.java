@@ -7,8 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.proto.buddy.mountainbuddyv2.R;
+import com.proto.buddy.mountainbuddyv2.activities.mainActivity;
 
 
 /**
@@ -29,6 +31,8 @@ public class RouteItemFragment extends Fragment {
 
 
     private OnFragmentInteractionListener mListener;
+
+    private mainActivity mainActiv;
 
     /**
      * Use this factory method to create a new instance of
@@ -55,6 +59,8 @@ public class RouteItemFragment extends Fragment {
         if (getArguments() != null) {
 
         }
+
+        mainActiv = (mainActivity)this.getActivity();
     }
 
     @Override
@@ -62,6 +68,15 @@ public class RouteItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_route_item, container, false);
         setHasOptionsMenu(true);
+
+        TextView title = (TextView)rootView.findViewById(R.id.route_item_title);
+
+        TextView description = (TextView)rootView.findViewById(R.id.route_item_description);
+
+        title.setText(mainActiv.getRouteManager().getCurrent().getName());
+
+        description.setText(mainActiv.getRouteManager().getCurrent().getDescription());
+
         return rootView;
     }
 
