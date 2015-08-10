@@ -1,4 +1,4 @@
-package com.proto.buddy.mountainbuddyv2.activities;
+package com.proto.buddy.mountainbuddyv2.activities.Navigation_Drawer;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -18,9 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.proto.buddy.mountainbuddyv2.R;
 
@@ -91,8 +89,10 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
+
+        View root = inflater.inflate(
+                R.layout.drawer_alt_layout, container, false);
+        mDrawerListView = (ListView) root.findViewById(R.id.list_drawer);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -102,7 +102,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerListView.setAdapter(new NavigationListAdapter(
                 getActionBar().getThemedContext()));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-        return mDrawerListView;
+        return root;
     }
 
     public boolean isDrawerOpen() {

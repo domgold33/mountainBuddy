@@ -11,11 +11,12 @@
         <item name="background">@color/color_green</item>
     </style>
 
-    <style name="MyTheme" parent="@style/Theme.AppCompat.Light">
+    <style name="MyTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle"   tools:ignore="NewApi">@style/MyActionBar</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
-
     </style>
+
+    
 </resources>
 
 

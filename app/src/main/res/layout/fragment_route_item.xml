@@ -27,7 +27,7 @@
             android:text="Notice"
             android:id="@+id/route_item_button_accept"
             android:layout_weight="5"
-            android:background="#ff97ff87" />
+            android:background="@color/color_green" />
 
         <ImageButton
             android:layout_width="0dp"
@@ -35,7 +35,7 @@
             android:text="Picture"
             android:id="@+id/route_item_button_dismiss"
             android:layout_weight="5"
-            android:background="#ffff3212" />
+            android:background="@color/color_red" />
     </LinearLayout>
 
     <LinearLayout

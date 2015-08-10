@@ -15,6 +15,12 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
 import com.proto.buddy.mountainbuddyv2.R;
+import com.proto.buddy.mountainbuddyv2.RouteManager;
+import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.RouteFragment;
+import com.proto.buddy.mountainbuddyv2.activities.Create_Route_screen.CreateRouteFragment;
+import com.proto.buddy.mountainbuddyv2.activities.Main_screen.MainFragment;
+import com.proto.buddy.mountainbuddyv2.activities.Navigation_Drawer.NavigationDrawerFragment;
+import com.proto.buddy.mountainbuddyv2.activities.Route_Item_Screen.RouteItemFragment;
 
 
 public class mainActivity extends ActionBarActivity
@@ -32,10 +38,23 @@ public class mainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+
+    private RouteManager routeManager;
+
+    public RouteManager getRouteManager() {
+        return routeManager;
+    }
+
+    public void setRouteManager(RouteManager routeManager) {
+        this.routeManager = routeManager;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        routeManager = new RouteManager(this.getApplicationContext());
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -45,6 +64,7 @@ public class mainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
     }
 
     @Override

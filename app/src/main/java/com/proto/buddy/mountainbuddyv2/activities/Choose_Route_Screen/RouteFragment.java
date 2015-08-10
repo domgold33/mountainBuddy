@@ -1,10 +1,9 @@
-package com.proto.buddy.mountainbuddyv2.activities;
+package com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,15 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.proto.buddy.mountainbuddyv2.R;
+import com.proto.buddy.mountainbuddyv2.RouteManager;
+import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.ListAdapter.RouteListAdapterAllRoutes;
+import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.ListAdapter.RouteListAdapterMyRoutes;
+import com.proto.buddy.mountainbuddyv2.activities.Route_Item_Screen.RouteItemFragment;
+import com.proto.buddy.mountainbuddyv2.activities.mainActivity;
 import com.proto.buddy.mountainbuddyv2.database.DatabaseHelper;
 import com.proto.buddy.mountainbuddyv2.model.Route;
 
@@ -31,7 +34,7 @@ import java.util.ArrayList;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class RouteFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class RouteFragment extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,7 +47,7 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
 
     private DatabaseHelper db;
 
-    private ArrayList<Route> routes;
+    private mainActivity mainActivity;
 
     private OnFragmentInteractionListener mListener;
 
@@ -59,7 +62,11 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
+    private ListAdapter mAdapter_all;
+
+    private ListAdapter mAdapter_my;
+
+    private RouteManager routeManager;
 
 
     private FragmentManager fragmentManager;
@@ -85,22 +92,11 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
 
         fragmentManager = this.getActivity().getSupportFragmentManager();
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-        // TODO: Change Adapter to display your content
-        db = new DatabaseHelper(this.getActivity().getApplicationContext());
-        db.getWritableDatabase();
-
-        db.getAllRoutes();
-        DatabaseHelper dbHelper = new DatabaseHelper(this.getActivity().getApplicationContext());
-        routes = dbHelper.getAllRoutes();
-
         // initiate the listadapter
-        mAdapter = new RouteListAdapter<String>(this.getActivity().getApplicationContext(), routes);
+        mAdapter_all = new RouteListAdapterAllRoutes<String>(this.getActivity().getApplicationContext(), routeManager.getAllRoutes());
+
         // assign the list adapter
+        mAdapter_my = new RouteListAdapterMyRoutes<String>(this.getActivity().getApplicationContext(), routeManager.getMyRoutes());
 
 
 
@@ -113,18 +109,36 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
 
         // Set the adapter
         mListView_all = (AbsListView) view.findViewById(R.id.list_all_routes);
-        ((AdapterView<ListAdapter>) mListView_all).setAdapter(mAdapter);
+        mListView_all.setAdapter(mAdapter_all);
 
         // Set OnItemClickListener so we can be notified on item clicks
-        mListView_all.setOnItemClickListener(this);
+        mListView_all.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                routeManager.setCurrent((Route) mAdapter_all.getItem(position));
+
+                mainActivity.setRouteManager(routeManager);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, RouteItemFragment.newInstance()).addToBackStack("List_to_Item")
+                        .commit();
+            }
+        });
 
 
         // Set the adapter
         mListView_my = (AbsListView) view.findViewById(R.id.list_my_routes);
-        ((AdapterView<ListAdapter>) mListView_my).setAdapter(mAdapter);
+        mListView_my.setAdapter(mAdapter_my);
 
         // Set OnItemClickListener so we can be notified on item clicks
-        mListView_my.setOnItemClickListener(this);
+        mListView_my.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                routeManager.setCurrent((Route) mAdapter_my.getItem(position));
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, RouteItemFragment.newInstance()).addToBackStack("List_to_Item")
+                        .commit();
+            }
+        });
 
         return view;
     }
@@ -132,7 +146,10 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((mainActivity) activity).onSectionAttached(3);
+
+        mainActivity = ((mainActivity) activity);
+        mainActivity.onSectionAttached(3);
+        routeManager = mainActivity.getRouteManager();
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
@@ -147,16 +164,9 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mainActivity.setRouteManager(this.routeManager);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //Toast.makeText(this.getActivity().getApplicationContext(),"Should work", Toast.LENGTH_LONG).show();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, RouteItemFragment.newInstance()).addToBackStack("List_to_Item")
-                .commit();
-    }
-    
 
     /**
      * This interface must be implemented by activities that contain this
