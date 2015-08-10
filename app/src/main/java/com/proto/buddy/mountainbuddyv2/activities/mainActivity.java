@@ -18,7 +18,9 @@ import com.proto.buddy.mountainbuddyv2.R;
 
 
 public class mainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, MainFragment.OnFragmentInteractionListener, RouteFragment.OnFragmentInteractionListener, CreateRouteFragment.OnFragmentInteractionListener, RouteItemFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, MainFragment.OnFragmentInteractionListener,
+        RouteFragment.OnFragmentInteractionListener, CreateRouteFragment.OnFragmentInteractionListener,
+        RouteItemFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
