@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.proto.buddy.mountainbuddyv2.R;
-import com.proto.buddy.mountainbuddyv2.activities.mainActivity;
+import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
 
 
 /**
@@ -32,7 +32,7 @@ public class RouteItemFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private mainActivity mainActiv;
+    private MainActivity mainActiv;
 
     /**
      * Use this factory method to create a new instance of
@@ -60,7 +60,7 @@ public class RouteItemFragment extends Fragment {
 
         }
 
-        mainActiv = (mainActivity)this.getActivity();
+        mainActiv = (MainActivity)this.getActivity();
     }
 
     @Override

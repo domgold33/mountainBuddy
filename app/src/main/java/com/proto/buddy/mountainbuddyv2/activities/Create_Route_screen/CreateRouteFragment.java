@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.proto.buddy.mountainbuddyv2.R;
-import com.proto.buddy.mountainbuddyv2.activities.mainActivity;
+import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
 
 
 /**
@@ -76,7 +76,7 @@ public class  CreateRouteFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((mainActivity) activity).onSectionAttached(2);
+        ((MainActivity) activity).onSectionAttached(2);
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {

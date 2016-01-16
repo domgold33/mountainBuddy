@@ -56,7 +56,7 @@ public class ListActivity extends android.app.ListActivity {
 
         Route selected = (Route) myAdapter.getItem(position);
 
-        Intent i = new Intent(ListActivity.this, mainActivity.class);
+        Intent i = new Intent(ListActivity.this, MainActivity.class);
         i.putExtra("Route", selected);
         startActivity(i);
 

@@ -1,32 +1,41 @@
 package com.proto.buddy.mountainbuddyv2.activities;
 
 import android.app.Activity;
-import android.app.FragmentManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polyline;
 import com.proto.buddy.mountainbuddyv2.R;
+import com.proto.buddy.mountainbuddyv2.model.Route;
 
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MainFragment.OnFragmentInteractionListener} interface
+ * {@link RouteInProgressFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MainFragment#newInstance} factory method to
+ * Use the {@link RouteInProgressFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
+public class RouteInProgressFragment extends Fragment implements LocationListener, OnMapReadyCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private static final String ARG_SECTION_NUMBER = "section_number";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -34,31 +43,71 @@ public class MainFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private FragmentManager fragmentManager;
+    private LocationManager locationManager;
+    /**
+     * Die Route, die hier aufgezeichnet wird.
+     */
+    private Route route;
+    /**
+     * Der Breitengrad der momentanen Position.
+     */
+    private double latitude;
+    /**
+     * Der Laengengrad der momentanen Position.
+     */
+    private double longitude;
+    /**
+     * Die Hoehe der momentanen Position.
+     */
+    private double altitude;
+    /**
+     * Die momentane Zeit.
+     */
+    private String time;
+    /**
+     * Die zuletzt ermittelte Position.
+     */
+    private Location currentBestLocation;
+    /**
+     * Die bisher zurueckgelegte Distanz in Metern.
+     */
+    private double distance;
+    private TextView distanceText;
+    private TextView heightText;
+    /**
+     * Der TextualNotice, der die momentane Position auf der Karte anzeigt.
+     */
+    private Marker currentLocationMarker;
+    private Button pictureButton;
+    private Polyline routePolyline;
+    private ArrayList<LatLng> polylineData;
+    private GoogleMap map;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment MainFragment.
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment RouteInProgressFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MainFragment newInstance(int sectionNumber) {
-        MainFragment fragment = new MainFragment();
+    public static RouteInProgressFragment newInstance(String param1, String param2) {
+        RouteInProgressFragment fragment = new RouteInProgressFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public MainFragment() {
+    public RouteInProgressFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragmentManager = this.getActivity().getFragmentManager();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -68,8 +117,8 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        return rootView;
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_route_in_progress, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -83,7 +132,7 @@ public class MainFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            ((mainActivity) activity).onSectionAttached(1);
+            mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -94,6 +143,31 @@ public class MainFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.map = googleMap;
     }
 
     /**

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -31,7 +30,7 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="Start"
+            android:text="Stop"
             android:id="@+id/button_start"
             android:layout_weight="3"
             android:background="@color/color_green"
@@ -69,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="--"
+                android:text=" 2.5 km"
                 android:id="@+id/main_infor_bar_distance"
                 android:layout_marginTop="@dimen/infobar_text1_margin_top"
                 android:layout_gravity="center_horizontal"
@@ -96,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="--"
+                android:text=" 1000 m"
                 android:id="@+id/main_infor_bar_max_height"
                 android:layout_marginTop="@dimen/infobar_text1_margin_top"
                 android:layout_gravity="center_horizontal"
@@ -106,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Current Altitude"
+                android:text="Max Height"
                 android:layout_marginTop="@dimen/infobar_text2_margin_top"
                 android:id="@+id/main_static_height_desc"
                 android:layout_gravity="center_horizontal" />
@@ -120,5 +119,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/main_infor_bar"
         android:layout_above="@+id/main_option_bar" />
+
 
 </RelativeLayout>

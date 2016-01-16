@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +11,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.proto.buddy.mountainbuddyv2.R;
@@ -132,7 +129,7 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((mainActivity) activity).onSectionAttached(3);
+        ((MainActivity) activity).onSectionAttached(3);
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {

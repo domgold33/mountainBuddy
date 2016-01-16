@@ -37,6 +37,8 @@ public class RouteManager {
 
     }
 
+    //TODO: create methods for interaction with current route(save, add photo/notice etc)
+
     public Route getCurrent() {
         return current;
     }
@@ -64,7 +66,5 @@ public class RouteManager {
     public void saveRoutes(){
         //to be filled
     }
-
-
 
 }

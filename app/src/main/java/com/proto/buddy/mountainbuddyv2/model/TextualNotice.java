@@ -5,14 +5,14 @@ import java.util.*;
 /**
  * 
  */
-public class Marker extends Notice {
+public class TextualNotice extends Notice {
 
     /**
      * @param place 
      * @param title 
      * @param text
      */
-    public Marker(Point place, String title, String text) {
+    public TextualNotice(Point place, String title, String text) {
         super(place, title, text);
     }
 

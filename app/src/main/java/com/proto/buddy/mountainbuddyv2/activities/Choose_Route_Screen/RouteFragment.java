@@ -11,7 +11,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TabHost;
-import android.widget.Toast;
 
 
 import com.proto.buddy.mountainbuddyv2.R;
@@ -19,11 +18,9 @@ import com.proto.buddy.mountainbuddyv2.RouteManager;
 import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.ListAdapter.RouteListAdapterAllRoutes;
 import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.ListAdapter.RouteListAdapterMyRoutes;
 import com.proto.buddy.mountainbuddyv2.activities.Route_Item_Screen.RouteItemFragment;
-import com.proto.buddy.mountainbuddyv2.activities.mainActivity;
+import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
 import com.proto.buddy.mountainbuddyv2.database.DatabaseHelper;
 import com.proto.buddy.mountainbuddyv2.model.Route;
-
-import java.util.ArrayList;
 
 /**
  * A fragment representing a list of Items.
@@ -47,7 +44,7 @@ public class RouteFragment extends Fragment{
 
     private DatabaseHelper db;
 
-    private mainActivity mainActivity;
+    private MainActivity mainActivity;
 
     private OnFragmentInteractionListener mListener;
 
@@ -147,7 +144,7 @@ public class RouteFragment extends Fragment{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        mainActivity = ((mainActivity) activity);
+        mainActivity = ((MainActivity) activity);
         mainActivity.onSectionAttached(3);
         routeManager = mainActivity.getRouteManager();
         try {
