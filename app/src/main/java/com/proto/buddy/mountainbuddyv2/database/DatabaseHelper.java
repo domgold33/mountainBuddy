@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Log
     private static final String LOG = "DatabaseHelper";
     private static final String DATABASE_NAME = "mountainbuddy_db";
-    private static final String FILE_DIR = "MountainBuddy";
+    private static final String FILE_DIR = "MountainBuddyV2";
 
     // Database Version
     private static final int DATABASE_VERSION = 3;
