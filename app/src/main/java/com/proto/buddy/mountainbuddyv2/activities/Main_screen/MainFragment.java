@@ -95,17 +95,17 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         distanceText = (TextView) this.getActivity().findViewById(R.id.main_infor_bar_distance);
         heightText = (TextView) this.getActivity().findViewById(R.id.main_infor_bar_max_height);
         startButton = (Button) this.getActivity().findViewById(R.id.button_start);
-        pictureButton = (ImageButton) this.getActivity().findViewById(R.id.button_takePic);
-        noticeButton = (ImageButton) this.getActivity().findViewById(R.id.button_notice);
-        pictureButton.setClickable(false);
-        noticeButton.setClickable(false);
-        startButton.setOnClickListener(new View.OnClickListener() {
+        /*pictureButton = (ImageButton) this.getActivity().findViewById(R.id.button_takePic);
+        noticeButton = (ImageButton) this.getActivity().findViewById(R.id.button_notice);*/
+        /*pictureButton.setClickable(false);
+        noticeButton.setClickable(false);*/
+        /*startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startRoute();
             }
-        });
-        pictureButton.setOnClickListener(new View.OnClickListener() {
+        });*/
+       /* pictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO: insert method for taking and saving a picture
@@ -116,7 +116,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
             public void onClick(View v) {
                 //TODO: create method for opening a dialogue in which the user can input text to create notice
             }
-        });
+        });*/
     }
 
     @Override

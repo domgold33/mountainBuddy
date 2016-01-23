@@ -22,6 +22,8 @@ import com.proto.buddy.mountainbuddyv2.activities.Create_Route_screen.CreateRout
 import com.proto.buddy.mountainbuddyv2.activities.Main_screen.MainFragment;
 import com.proto.buddy.mountainbuddyv2.activities.Navigation_Drawer.NavigationDrawerFragment;
 import com.proto.buddy.mountainbuddyv2.activities.Route_Item_Screen.RouteItemFragment;
+import com.proto.buddy.mountainbuddyv2.conf.AppConfig;
+import com.proto.buddy.mountainbuddyv2.database.RemoteDatabaseHelper;
 
 
 public class MainActivity extends ActionBarActivity
@@ -53,9 +55,13 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "Start App");
+
+        RemoteDatabaseHelper DB = new RemoteDatabaseHelper(getBaseContext());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "message");
+
 //        routeManager = new RouteManager(this.getApplicationContext());
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -76,16 +82,19 @@ public class MainActivity extends ActionBarActivity
 
         switch (position) {
             case 0:
+                Log.d(TAG, "************* Start MainFragment ***********");
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, MainFragment.newInstance(position + 1)).addToBackStack("Drawer_to_Start")
                         .commit();
                 break;
             case 1:
+                Log.d(TAG, "************* Start CreateRouteFragment ***********");
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, CreateRouteFragment.newInstance()).addToBackStack("Drawer_to_Create_Route")
                         .commit();
                 break;
             case 2:
+                Log.d(TAG, "************* Start RouteFragment ***********");
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, RouteFragment.newInstance()).addToBackStack("Drawer_to_List")
                         .commit();
