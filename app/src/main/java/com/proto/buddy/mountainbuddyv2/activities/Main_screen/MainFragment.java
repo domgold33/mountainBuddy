@@ -3,29 +3,40 @@ package com.proto.buddy.mountainbuddyv2.activities.Main_screen;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.proto.buddy.mountainbuddyv2.R;
+import com.proto.buddy.mountainbuddyv2.activities.AppLogic.RouteRecorder;
 import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
+import com.proto.buddy.mountainbuddyv2.model.Point;
 import com.proto.buddy.mountainbuddyv2.model.Route;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -36,7 +47,7 @@ import java.util.ArrayList;
  * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment implements OnMapReadyCallback, LocationListener{
+public class MainFragment extends Fragment implements OnMapReadyCallback{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -44,9 +55,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Locati
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = "MainFragment";
 
     private OnFragmentInteractionListener mListener;
 
@@ -70,39 +79,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Locati
      * The route that is currently being tracked.
      */
     private Route route;
-    /**
-     * Latitude of the current position.
-     */
-    private double latitude;
-    /**
-     * Longitude of the current position.
-     */
-    private double longitude;
-    /**
-     * Altitude of the current position.
-     */
-    private double altitude;
-    /**
-     * Current time.
-     */
-    private String time;
-    /**
-     * The most recently processed position.
-     */
-    private Location currentBestLocation;
-    /**
-     * Distance that has been tracked.
-     */
-    private double distance;
-    /**
-     * A marker showing the current position on the map.
-     */
-    private Marker currentLocationMarker;
-    /**
-     * A line which shows the tracked route.
-     */
-    private Polyline routePolyline;
-    private ArrayList<LatLng> polylineData;
+    private RouteRecorder routeRecorder;
     private GoogleMap map;
 
     /**
@@ -129,8 +106,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Locati
         super.onCreate(savedInstanceState);
         fragmentManager = this.getActivity().getFragmentManager();
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
         locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
         distanceText = (TextView) this.getActivity().findViewById(R.id.main_infor_bar_distance);
@@ -192,63 +167,21 @@ public class MainFragment extends Fragment implements OnMapReadyCallback, Locati
     }
 
     private void startRoute(){
-        this.route = new Route();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MILLISECONDS_BETWEEN_UPDATES, METERS_BETWEEN_UPDATES, this);
-//        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MILLISECONDS_BETWEEN_UPDATES, METERS_BETWEEN_UPDATES, this);
-        pictureButton.setClickable(true);
-        noticeButton.setClickable(true);
+        if(map != null){
+            this.route = new Route();
+            routeRecorder = new RouteRecorder(route, map, distanceText, heightText, locationManager);
+            routeRecorder.requestLocationUpdates(LocationManager.GPS_PROVIDER);
+//        routeRecorder.requestLocationUpdates(LocationManager.NETWORK_PROVIDER);
+            pictureButton.setClickable(true);
+            noticeButton.setClickable(true);
+        }else{
+            Toast.makeText(this.getActivity().getApplicationContext(), "Please wait for the map to be loaded", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void stopRoute(){
         //TODO: insert steps to save route, opening a dialogue (options: cancel, save route, stop route and do not save) etc
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    private boolean isBetterLocation(Location previousLocation, Location newLocation){
-        final int ONE_MINUTE = 1000 * 60;
-        if(previousLocation == null){
-            return true;
-        }
-
-        long deltaTime = newLocation.getTime() - previousLocation.getTime();
-        boolean newerThanOneMin = deltaTime > ONE_MINUTE;
-        boolean olderThanOneMin = deltaTime < -ONE_MINUTE;
-        boolean newer = deltaTime > 0;
-
-        if(newerThanOneMin){
-            return true;
-        }else if(olderThanOneMin){
-            return false;
-        }
-
-        float deltaAccuracy = newLocation.getAccuracy() - previousLocation.getAccuracy();
-        boolean isLessAccurate = deltaAccuracy > 0;
-        boolean isMoreAccurate = deltaAccuracy < 0;
-        if(isMoreAccurate){
-            return true;
-        }else if(newer && !isLessAccurate){
-            return true;
-        }
-        return false;
+        routeRecorder.cancelLocationUpdates();
     }
 
     @Override
