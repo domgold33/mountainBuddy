@@ -3,14 +3,10 @@ package com.proto.buddy.mountainbuddyv2.activities.Main_screen;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.graphics.Color;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,24 +15,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.proto.buddy.mountainbuddyv2.R;
-import com.proto.buddy.mountainbuddyv2.activities.AppLogic.RouteRecorder;
+import com.proto.buddy.mountainbuddyv2.AppLogic.RouteRecorder;
 import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
-import com.proto.buddy.mountainbuddyv2.model.Point;
 import com.proto.buddy.mountainbuddyv2.model.Route;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 
 /**
@@ -166,6 +150,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         mListener = null;
     }
 
+    /**
+     * Upon button press, activates the processing of location data, starting the route tracking process.
+     */
     private void startRoute(){
         if(map != null){
             this.route = new Route();
@@ -179,6 +166,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         }
     }
 
+    /**
+     * Upon button press, stops processing of location data, ending the route tracking process. The route will then be saved in7
+     * the database.
+     */
     private void stopRoute(){
         //TODO: insert steps to save route, opening a dialogue (options: cancel, save route, stop route and do not save) etc
         routeRecorder.cancelLocationUpdates();

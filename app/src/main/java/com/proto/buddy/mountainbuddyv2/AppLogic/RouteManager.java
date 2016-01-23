@@ -1,4 +1,4 @@
-package com.proto.buddy.mountainbuddyv2;
+package com.proto.buddy.mountainbuddyv2.AppLogic;
 
 import android.content.Context;
 

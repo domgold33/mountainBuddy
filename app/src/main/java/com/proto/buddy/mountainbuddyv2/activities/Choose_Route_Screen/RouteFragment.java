@@ -14,7 +14,7 @@ import android.widget.TabHost;
 
 
 import com.proto.buddy.mountainbuddyv2.R;
-import com.proto.buddy.mountainbuddyv2.RouteManager;
+import com.proto.buddy.mountainbuddyv2.AppLogic.RouteManager;
 import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.ListAdapter.RouteListAdapterAllRoutes;
 import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.ListAdapter.RouteListAdapterMyRoutes;
 import com.proto.buddy.mountainbuddyv2.activities.Route_Item_Screen.RouteItemFragment;

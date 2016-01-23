@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
 import com.proto.buddy.mountainbuddyv2.R;
-import com.proto.buddy.mountainbuddyv2.RouteManager;
+import com.proto.buddy.mountainbuddyv2.AppLogic.RouteManager;
 import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.RouteFragment;
 import com.proto.buddy.mountainbuddyv2.activities.Create_Route_screen.CreateRouteFragment;
 import com.proto.buddy.mountainbuddyv2.activities.Main_screen.MainFragment;

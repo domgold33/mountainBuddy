@@ -1,6 +1,5 @@
-package com.proto.buddy.mountainbuddyv2.activities.AppLogic;
+package com.proto.buddy.mountainbuddyv2.AppLogic;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -19,8 +18,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.proto.buddy.mountainbuddyv2.model.Point;
 import com.proto.buddy.mountainbuddyv2.model.Route;
 
-import org.w3c.dom.Text;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +25,8 @@ import java.util.Date;
 
 /**
  * Created by Dominik on 22.01.2016.
+ * Processes relevant location data and saves it to a specified route. Also handles visual updates to the GoogleMap fragment in
+ * the main screen of the application while tracking a route.
  */
 public class RouteRecorder implements LocationListener {
 
@@ -66,6 +65,14 @@ public class RouteRecorder implements LocationListener {
     private Polyline routePolyline;
     private ArrayList<LatLng> polylineData;
 
+    /**
+     * Creates a new RouteRecorder responsible for processing data associated to the given route.
+     * @param route The route that will be tracked.
+     * @param map The GoogleMap object which is displayed in the application's main screen.
+     * @param distanceText A UI element in the main screen, displays distance tracked
+     * @param heightText A UI element in the main screen, displays current altitude
+     * @param locationManager Android class, necessary for obtaining location data
+     */
     public RouteRecorder(Route route, GoogleMap map, TextView distanceText, TextView heightText, LocationManager locationManager){
         this.map = map;
         this.route = route;
@@ -123,6 +130,11 @@ public class RouteRecorder implements LocationListener {
 
     }
 
+    /**
+     * Updates the map visually by the given location data
+     * @param latitude Latitude of current location
+     * @param longitude Longitude of current location
+     */
     private void updateMap(double latitude, double longitude){
         if(map != null) {
             LatLng newLatLng = new LatLng(latitude, longitude);
@@ -145,6 +157,11 @@ public class RouteRecorder implements LocationListener {
         }
     }
 
+    /**
+     * Checks whether a newly obtained location is better in accordance to recency and accuracy than the most recent one.
+     * @param newLocation The new location, to be checked
+     * @return Whether the given location is better
+     */
     private boolean isBetterLocation(Location newLocation){
         final int ONE_MINUTE = 1000 * 60;
         if(currentBestLocation == null){
