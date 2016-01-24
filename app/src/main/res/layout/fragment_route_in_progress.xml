@@ -112,13 +112,4 @@
         </LinearLayout>
     </LinearLayout>
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/main_infor_bar"
-        android:layout_above="@+id/main_option_bar" />
-
-
 </RelativeLayout>

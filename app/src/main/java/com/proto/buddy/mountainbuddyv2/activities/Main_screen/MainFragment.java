@@ -7,6 +7,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.proto.buddy.mountainbuddyv2.R;
 import com.proto.buddy.mountainbuddyv2.AppLogic.RouteRecorder;
@@ -92,20 +94,29 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         if (getArguments() != null) {
         }
         locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
-        distanceText = (TextView) this.getActivity().findViewById(R.id.main_infor_bar_distance);
-        heightText = (TextView) this.getActivity().findViewById(R.id.main_infor_bar_max_height);
-        startButton = (Button) this.getActivity().findViewById(R.id.button_start);
-        /*pictureButton = (ImageButton) this.getActivity().findViewById(R.id.button_takePic);
-        noticeButton = (ImageButton) this.getActivity().findViewById(R.id.button_notice);*/
-        /*pictureButton.setClickable(false);
-        noticeButton.setClickable(false);*/
-        /*startButton.setOnClickListener(new View.OnClickListener() {
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        MapFragment mapFragment = (MapFragment) getActivity().getFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        distanceText = (TextView) rootView.findViewById(R.id.main_infor_bar_distance);
+        heightText = (TextView) rootView.findViewById(R.id.main_infor_bar_max_height);
+        startButton = (Button) rootView.findViewById(R.id.button_start);
+        pictureButton = (ImageButton) rootView.findViewById(R.id.button_takePic);
+        noticeButton = (ImageButton) rootView.findViewById(R.id.button_notice);
+        pictureButton.setClickable(false);
+        noticeButton.setClickable(false);
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startRoute();
             }
-        });*/
-       /* pictureButton.setOnClickListener(new View.OnClickListener() {
+        });
+        pictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO: insert method for taking and saving a picture
@@ -116,13 +127,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
             public void onClick(View v) {
                 //TODO: create method for opening a dialogue in which the user can input text to create notice
             }
-        });*/
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        });
         return rootView;
     }
 
@@ -159,8 +164,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
             routeRecorder = new RouteRecorder(route, map, distanceText, heightText, locationManager);
             routeRecorder.requestLocationUpdates(LocationManager.GPS_PROVIDER);
 //        routeRecorder.requestLocationUpdates(LocationManager.NETWORK_PROVIDER);
-            pictureButton.setClickable(true);
-            noticeButton.setClickable(true);
+//            pictureButton.setClickable(true);
+//            noticeButton.setClickable(true);
         }else{
             Toast.makeText(this.getActivity().getApplicationContext(), "Please wait for the map to be loaded", Toast.LENGTH_LONG).show();
         }
@@ -177,6 +182,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "Map Received");
         this.map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }

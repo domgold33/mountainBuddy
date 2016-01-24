@@ -5,8 +5,8 @@ package com.proto.buddy.mountainbuddyv2.conf;
  */
 public class AppConfig {
 
-    public static String URL_REMOTE_SERVER = "http://78.47.217.227/mbapi/";
+    public static final String URL_REMOTE_SERVER = "http://78.47.217.227/mbapi/";
 
-    public static String URL_REMOTE_SERVER_ROUTES = "http://78.47.217.227/mbapi/routes/";
+    public static final String URL_REMOTE_SERVER_ROUTES = "http://78.47.217.227/mbapi/routes/";
 
 }
