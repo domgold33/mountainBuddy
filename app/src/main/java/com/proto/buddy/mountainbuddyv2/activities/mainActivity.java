@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "Start App");
 
-        RemoteDatabaseHelper DB = new RemoteDatabaseHelper(getBaseContext());
+        RemoteDatabaseHelper DB = RemoteDatabaseHelper.getInstance(getBaseContext());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
