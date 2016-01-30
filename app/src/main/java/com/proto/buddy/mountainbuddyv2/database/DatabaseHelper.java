@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String FILE_DIR = "MountainBuddyV2";
 
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
 
     // Table Names
     private static final String TABLE_USERS = "users";
@@ -88,8 +88,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROUTES);
 //        db.execSQL(CREATE_TABLE_ROUTE);
 
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTICE);
-        db.execSQL(CREATE_TABLE_NOTICE);
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTICE);
+        //db.execSQL(CREATE_TABLE_NOTICE);
 
         // Log.d(LOG, "******db path: " + context.getDatabasePath(DATABASE_NAME));
 
@@ -115,7 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + ROUTES_END_POINT_ID + " INTEGER, "
                 + ROUTES_ROUTE_HAS_POINTS_ID + " INTEGER, "
                 + ROUTES_SHORT_DESCRIPTION + " TEXT, "
-                + ROUTES_DESCRIPTION + " TEXT, "
+                + ROUTES_DESCRIPTION + " TEXT "
             + ")";
 
     // Routes table create statement

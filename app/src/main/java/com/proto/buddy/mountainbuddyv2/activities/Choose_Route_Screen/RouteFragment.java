@@ -22,6 +22,8 @@ import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
 import com.proto.buddy.mountainbuddyv2.database.DatabaseHelper;
 import com.proto.buddy.mountainbuddyv2.model.Route;
 
+import java.util.ArrayList;
+
 /**
  * A fragment representing a list of Items.
  * <p>
@@ -89,13 +91,21 @@ public class RouteFragment extends Fragment{
 
         fragmentManager = this.getActivity().getSupportFragmentManager();
 
+        DatabaseHelper db = new DatabaseHelper(this.getActivity().getApplicationContext());
+
+        ArrayList<Route> allRoutes = db.getAllRoutes();
+
+        for(Route r: allRoutes){
+            System.out.println(r.toString());
+            System.out.println("---------");
+        }
+
         // initiate the listadapter
-        mAdapter_all = new RouteListAdapterAllRoutes<String>(this.getActivity().getApplicationContext(), routeManager.getAllRoutes());
+        mAdapter_all = new RouteListAdapterAllRoutes<String>(this.getActivity().getApplicationContext(), allRoutes);
 
-        // assign the list adapter
+       /* // assign the list adapter
         mAdapter_my = new RouteListAdapterMyRoutes<String>(this.getActivity().getApplicationContext(), routeManager.getMyRoutes());
-
-
+*/
 
     }
 

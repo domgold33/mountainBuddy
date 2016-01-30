@@ -15,6 +15,7 @@ import android.widget.TabHost;
 
 import com.proto.buddy.mountainbuddyv2.R;
 import com.proto.buddy.mountainbuddyv2.database.DatabaseHelper;
+import com.proto.buddy.mountainbuddyv2.model.Point;
 import com.proto.buddy.mountainbuddyv2.model.Route;
 
 import java.util.ArrayList;
@@ -91,12 +92,15 @@ public class RouteFragment extends Fragment implements AbsListView.OnItemClickLi
         db = new DatabaseHelper(this.getActivity().getApplicationContext());
         db.getWritableDatabase();
 
-        db.getAllRoutes();
-        DatabaseHelper dbHelper = new DatabaseHelper(this.getActivity().getApplicationContext());
-        routes = dbHelper.getAllRoutes();
+        ArrayList<Point> l = db.getAllPoints();
+        // your code
+        for(Point p: l){
+            System.out.println(p.toString());
+            System.out.println("---------");
+        }
 
         // initiate the listadapter
-        mAdapter = new RouteListAdapter<String>(this.getActivity().getApplicationContext(), routes);
+//        mAdapter = new RouteListAdapter<String>(this.getActivity().getApplicationContext(), routes);
         // assign the list adapter
 
 

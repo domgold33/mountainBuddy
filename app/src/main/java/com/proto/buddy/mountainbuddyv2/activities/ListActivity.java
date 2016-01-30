@@ -2,6 +2,7 @@ package com.proto.buddy.mountainbuddyv2.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.proto.buddy.mountainbuddyv2.R;
 import com.proto.buddy.mountainbuddyv2.database.DatabaseHelper;
+import com.proto.buddy.mountainbuddyv2.model.Point;
 import com.proto.buddy.mountainbuddyv2.model.Route;
 
 import java.util.ArrayList;
@@ -30,17 +32,20 @@ public class ListActivity extends android.app.ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_choose_route);
 
-        db = new DatabaseHelper(getApplicationContext());
+        /*db = new DatabaseHelper(getApplicationContext());
         db.getWritableDatabase();
 
-        db.getAllRoutes();
-        DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
-        routes = dbHelper.getAllRoutes();
-
+        ArrayList<Point> l = db.getAllPoints();
+        // your code
+        for(Point p: l){
+            System.out.println(p.toString());
+            System.out.println("---------");
+        }*/
+//        Log.d("ListActivity------", routes.toString());
         // initiate the listadapter
-        myAdapter = new RouteListAdapter<String>(this, routes);
+//        myAdapter = new RouteListAdapter<String>(this, routes);
         // assign the list adapter
-        setListAdapter(myAdapter);
+//        setListAdapter(myAdapter);
 
 
     }
