@@ -32,11 +32,18 @@ import com.proto.buddy.mountainbuddyv2.R;
 import com.proto.buddy.mountainbuddyv2.AppLogic.RouteRecorder;
 import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
 import com.proto.buddy.mountainbuddyv2.activities.RouteSave;
+import com.proto.buddy.mountainbuddyv2.database.DatabaseHelper;
 import com.proto.buddy.mountainbuddyv2.database.RemoteDatabaseHelper;
+import com.proto.buddy.mountainbuddyv2.model.Notice;
+import com.proto.buddy.mountainbuddyv2.model.Picture;
+import com.proto.buddy.mountainbuddyv2.model.Point;
 import com.proto.buddy.mountainbuddyv2.model.Route;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 /**
@@ -70,6 +77,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
     private Button stopButton;
     private ImageButton pictureButton;
     private ImageButton noticeButton;
+    private DatabaseHelper db;
 
     /**
      * Instance of LocationManager class, used to help with GPS data processing
@@ -106,10 +114,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragmentManager = this.getActivity().getFragmentManager();
-        if (getArguments() != null) {
-        }
-        locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
 
     }
 
@@ -117,10 +121,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        MapFragment mapFragment = (MapFragment) getActivity().getFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        context = getActivity().getApplicationContext();
+
         distanceText = (TextView) rootView.findViewById(R.id.main_infor_bar_distance);
         heightText = (TextView) rootView.findViewById(R.id.main_infor_bar_max_height);
         startButton = (Button) rootView.findViewById(R.id.button_start);
@@ -144,30 +145,13 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
                 startButton.setVisibility(View.VISIBLE);
                 stopButton.setVisibility(View.GONE);
 
-                // start new fragment
-
-                /*// save to db
-                // save to db
-                RemoteDatabaseHelper db = new RemoteDatabaseHelper(context);
-                Route r = routeRecorder.getRoute();
-
-                JSONObject route = new JSONObject();
-                try {
-                    route.put("routeName", "test");
-                    route.put("description", "desc");
-                    route.put("startPointId", 1);
-                    route.put("endPointId", 2);
-                    route.put("routePointId", 2);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d(TAG, route.toString());*/
-
-                //db.POST(db.URL_REMOTE_SERVER + "/routes", );
+                stopRoute();
 
             }
         });
+
+
+
         pictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,6 +165,31 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
             }
         });
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        MapFragment mapFragment = (MapFragment) getActivity().getFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        context = getActivity().getApplicationContext();
+
+        fragmentManager = this.getActivity().getFragmentManager();
+        if (getArguments() != null) {
+        }
+        locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        // init Database
+        db = new DatabaseHelper(this.getActivity().getApplicationContext());
+        db.getWritableDatabase();
+        ArrayList<String> arr = db.getAllTableName();
+        Log.d(TAG, "*** Tables: ");
+        for (String s : arr){
+            Log.d(TAG, "****** " + s);
+        }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -229,8 +238,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
      * the database.
      */
     private void stopRoute(){
-        //TODO: insert steps to save route, opening a dialogue (options: cancel, save route, stop route and do not save) etc
         routeRecorder.cancelLocationUpdates();
+        saveRoute();
     }
 
     @Override
@@ -270,6 +279,119 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    /**
+     * Speichert die Route sowie sämtliche aufgezeichneten Punkte in der lokalen Datenbank, nachdem die Aufzeichnung gestoppt und ein Name
+     * für die Route eingegeben wurde.
+     */
+    private void saveRoute() {
+
+
+        DatabaseHelper db = new DatabaseHelper(this.getActivity().getApplicationContext());
+        db.getWritableDatabase();
+
+        Log.d(TAG, "********* Save route *********");
+
+        this.route = routeRecorder.getRoute();
+
+        this.route.setName("Test route");
+        this.route.setDescription("Hello, im a new route");
+
+        // insert start point
+        long startPointID = db.insertPoint(route.getStartPoint());
+        this.route.getStartPoint().setId(startPointID);
+
+        Log.d(TAG, "***Start point***");
+        Log.d(TAG, "Latitude: " + route.getStartPoint().getLatitude());
+        Log.d(TAG, "Longitude: " + route.getStartPoint().getLongitude());
+        Log.d(TAG, "Altitude: " + route.getStartPoint().getAltitude());
+        Log.d(TAG, "Time: " + route.getStartPoint().getTime());
+
+        ArrayList<Point> points = route.getOtherPoints();
+
+        // get last point from getOtherPoints, make it end point and delete it from OtherPoints
+        if(points.size() > 0) {
+//            Point endPoint = points.get(points.size() - 1);
+            Point endPoint = points.remove(points.size() - 1);
+
+            this.route.setEndPoint(endPoint);
+
+            // set dummy route to get the id
+            long routeId = db.insertRoute(route);
+            Log.d(TAG, "route id " + routeId);
+
+            // save kml
+            /*String kmlPath = getFilesDir().getPath() + route.getName() + "RouteId-" + routeId;
+            route.setKmlPath(kmlPath + ".kml");*/
+            // update points route id
+            route.getStartPoint().setRouteId(routeId);
+            db.updatePoint(startPointID, route.getStartPoint());
+            Log.d(TAG, "points.size() " + points.size());
+            Log.d(TAG, "points " + points.toString());
+            if(points.size() > 0){
+
+                for (Iterator<Point> it = points.iterator(); it.hasNext(); ) {
+                    Point p = it.next();
+                    Log.d(TAG, "point " + p.toString());
+
+                    long pointID = db.insertPoint(p);
+                    p.setId(pointID);
+                    p.setRouteId(routeId);
+
+                    // update points route id
+                    db.updatePoint(pointID, p);
+
+                    Log.d(TAG, "***Other point***");
+                    Log.d(TAG, "Latitude: " + p.getLatitude());
+
+                    Log.d(TAG, "Longitude: " + p.getLongitude());
+                    Log.d(TAG, "Altitude: " + p.getAltitude());
+                    Log.d(TAG, "Time: " + p.getTime());
+
+                }
+            }
+            ArrayList<Notice> notices = route.getListOfNotices();
+            if(notices.size() > 0){
+                for(Iterator<Notice> it = notices.iterator(); it.hasNext(); ){
+                    Picture p = (Picture) it.next();
+                    long pointID = db.insertPoint(p.getPlace());
+                    p.getPlace().setId(pointID);
+                    p.setRouteId(routeId);
+                    long noticeID = db.insertNotice(p);
+                    p.setId((int) noticeID);
+                }
+            }
+            Log.d(TAG, "***End point***");
+            Log.d(TAG, "Latitude: " + this.route.getEndPoint().getLatitude());
+            Log.d(TAG, "Longitude: " + this.route.getEndPoint().getLongitude());
+            Log.d(TAG, "Altitude: " + this.route.getEndPoint().getAltitude());
+            Log.d(TAG, "Time: " + this.route.getEndPoint().getTime());
+            long endPointID = db.insertPoint(this.route.getEndPoint());
+            this.route.getEndPoint().setRouteId(routeId);
+            this.route.getEndPoint().setId(endPointID);
+            // update points route id
+            db.updatePoint(endPointID, this.route.getEndPoint());
+
+            // insert notice in db
+            Log.d(TAG, "************getListOfNotices: " + route.getListOfNotices().size());
+
+            if(route.getListOfNotices().size() > 0 ){
+                for(Notice n : route.getListOfNotices()){
+                    Picture p = (Picture) n;
+                    p.setRouteId(routeId);
+                    db.insertNotice(p);
+                }
+            } else {
+                Log.d(TAG, "There are no pics: ");
+            }
+
+            // update route
+            db.updateRoute(routeId, this.route);
+        } else {
+            Log.d(TAG, "There is no other points and end point");
+        }
+
     }
 
 }
