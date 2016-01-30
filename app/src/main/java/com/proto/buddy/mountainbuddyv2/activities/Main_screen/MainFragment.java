@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -33,10 +36,18 @@ import com.proto.buddy.mountainbuddyv2.AppLogic.RouteRecorder;
 import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
 import com.proto.buddy.mountainbuddyv2.activities.RouteSave;
 import com.proto.buddy.mountainbuddyv2.database.RemoteDatabaseHelper;
+import com.proto.buddy.mountainbuddyv2.model.Notice;
+import com.proto.buddy.mountainbuddyv2.model.Picture;
+import com.proto.buddy.mountainbuddyv2.model.Point;
 import com.proto.buddy.mountainbuddyv2.model.Route;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -68,7 +79,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
     private TextView heightText;
     private Button startButton;
     private Button stopButton;
-    private ImageButton pictureButton;
+    private Button pictureButton;
     private ImageButton noticeButton;
 
     /**
@@ -125,7 +136,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         heightText = (TextView) rootView.findViewById(R.id.main_infor_bar_max_height);
         startButton = (Button) rootView.findViewById(R.id.button_start);
         stopButton = (Button) rootView.findViewById(R.id.button_stop);
-        pictureButton = (ImageButton) rootView.findViewById(R.id.button_takePic);
+        pictureButton = (Button) rootView.findViewById(R.id.button_takePic);
         noticeButton = (ImageButton) rootView.findViewById(R.id.button_notice);
         pictureButton.setClickable(false);
         noticeButton.setClickable(false);
@@ -171,7 +182,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         pictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: insert method for taking and saving a picture
+                try {
+                    File imgFile = createImageFile();
+                    takePictureAndSave(imgFile);
+                }catch (IOException e){
+                    Log.e(TAG, e.getMessage());
+                }
             }
         });
         noticeButton.setOnClickListener(new View.OnClickListener() {
@@ -190,6 +206,34 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         }
     }
 
+    private File createImageFile() throws IOException{
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName, /* prefix */
+                ".jpg", /* suffix */
+                storageDir /* directory */
+        );
+        // Save a file: path for use with ACTION_VIEW intents
+        return image;
+    }
+    
+    private void takePictureAndSave(File file){
+        Notice picture = new Picture(route.getOtherPoints().get(route.getOtherPoints().size() - 1), "new route", "new route", file.getPath());
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            if (file != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(file));
+                startActivityForResult(takePictureIntent, 1);
+            }
+        }
+        this.route.addNotice(picture);
+        Log.d(TAG, String.valueOf(route.getListOfNotices().size()));
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -199,6 +243,16 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        MapFragment mapFragment = (MapFragment) getActivity()
+                .getFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment != null)
+            getActivity().getFragmentManager().beginTransaction()
+                    .remove(mapFragment).commit();
     }
 
     @Override

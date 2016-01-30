@@ -79,9 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
         // try to save db on card
-        super(context, Environment.getExternalStorageDirectory()
-                + File.separator + FILE_DIR
-                + File.separator + DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
         SQLiteDatabase db = this.getWritableDatabase();
 //        db.execSQL("DROP TABLE IF EXISTS " + TABLE_POINTS);
