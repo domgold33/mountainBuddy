@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.proto.buddy.mountainbuddyv2.database.RemoteDatabaseHelper;
 import com.proto.buddy.mountainbuddyv2.model.Point;
 import com.proto.buddy.mountainbuddyv2.model.Route;
 
@@ -22,6 +24,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimerTask;
 
 /**
  * Created by Dominik on 22.01.2016.
@@ -31,7 +34,7 @@ import java.util.Date;
 public class RouteRecorder implements LocationListener {
 
     private final static int MILLISECONDS_BETWEEN_UPDATES = 2000;
-    private final static int METERS_BETWEEN_UPDATES = 10;
+    private final static int METERS_BETWEEN_UPDATES = 0;
     private static final String TAG = "RouteRecorder";
 
     private TextView distanceText;
@@ -138,7 +141,16 @@ public class RouteRecorder implements LocationListener {
     private void updateMap(double latitude, double longitude){
         if(map != null) {
             LatLng newLatLng = new LatLng(latitude, longitude);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(newLatLng, 10));
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(latitude, longitude))      // Sets the center of the map to location user
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+//            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//            map.moveCamera(CameraUpdateFactory.newLatLngZoom(newLatLng, 17));
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
             if(currentLocationMarker == null) {
                 currentLocationMarker = map.addMarker(new MarkerOptions()
                         .position(newLatLng)
@@ -163,7 +175,8 @@ public class RouteRecorder implements LocationListener {
      * @return Whether the given location is better
      */
     private boolean isBetterLocation(Location newLocation){
-        final int ONE_MINUTE = 1000 * 60;
+        Log.d(TAG, "isBetterLocation started");
+        final int ONE_MINUTE = 1000 * 10;
         if(currentBestLocation == null){
             return true;
         }
@@ -196,6 +209,20 @@ public class RouteRecorder implements LocationListener {
 
     public void cancelLocationUpdates(){
         locationManager.removeUpdates(this);
+
+        // create end point and delete last point from otherPoints
+        ArrayList<Point> otherPoints = this.route.getOtherPoints();
+        if(otherPoints.size() > 1){
+            this.route.setEndPoint(otherPoints.get(otherPoints.size() - 1));
+            otherPoints.remove(otherPoints.size() - 1);
+            Log.d(TAG, route.toString());
+        } else {
+            Log.d(TAG, "[cancelLocationUpdates] Route is too small");
+        }
+    }
+
+    public Route getRoute(){
+        return this.route;
     }
 
 }

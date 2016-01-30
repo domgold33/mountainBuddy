@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mainActivity$PlaceholderFragment">
+    tools:context=".mainActivity$PlaceholderFragment"
+    android:id="@+id/mainFragment">
 
     <TextView android:id="@+id/section_label" android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -35,7 +36,18 @@
             android:id="@+id/button_start"
             android:layout_weight="3"
             android:background="@color/color_green"
-            android:textColor="@color/color_white" />
+            android:textColor="@color/color_white"
+            />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="Stop"
+            android:id="@+id/button_stop"
+            android:layout_weight="3"
+            android:background="@color/color_red"
+            android:textColor="@color/color_white"
+            android:visibility="gone"
+            />
 
         <ImageButton
             android:layout_width="0dp"

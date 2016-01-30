@@ -1,12 +1,16 @@
 package com.proto.buddy.mountainbuddyv2.activities.Main_screen;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +20,23 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.proto.buddy.mountainbuddyv2.R;
 import com.proto.buddy.mountainbuddyv2.AppLogic.RouteRecorder;
 import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
+import com.proto.buddy.mountainbuddyv2.activities.RouteSave;
+import com.proto.buddy.mountainbuddyv2.database.RemoteDatabaseHelper;
 import com.proto.buddy.mountainbuddyv2.model.Route;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -68,6 +82,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
     private RouteRecorder routeRecorder;
     private GoogleMap map;
 
+    private Context context;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -94,6 +110,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         if (getArguments() != null) {
         }
         locationManager = (LocationManager) this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+
     }
 
     @Override
@@ -103,9 +120,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         MapFragment mapFragment = (MapFragment) getActivity().getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        context = getActivity().getApplicationContext();
         distanceText = (TextView) rootView.findViewById(R.id.main_infor_bar_distance);
         heightText = (TextView) rootView.findViewById(R.id.main_infor_bar_max_height);
         startButton = (Button) rootView.findViewById(R.id.button_start);
+        stopButton = (Button) rootView.findViewById(R.id.button_stop);
         pictureButton = (ImageButton) rootView.findViewById(R.id.button_takePic);
         noticeButton = (ImageButton) rootView.findViewById(R.id.button_notice);
         pictureButton.setClickable(false);
@@ -113,7 +132,40 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startButton.setVisibility(View.GONE);
+                stopButton.setVisibility(View.VISIBLE);
                 startRoute();
+            }
+        });
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                routeRecorder.cancelLocationUpdates();
+                startButton.setVisibility(View.VISIBLE);
+                stopButton.setVisibility(View.GONE);
+
+                // start new fragment
+
+                /*// save to db
+                // save to db
+                RemoteDatabaseHelper db = new RemoteDatabaseHelper(context);
+                Route r = routeRecorder.getRoute();
+
+                JSONObject route = new JSONObject();
+                try {
+                    route.put("routeName", "test");
+                    route.put("description", "desc");
+                    route.put("startPointId", 1);
+                    route.put("endPointId", 2);
+                    route.put("routePointId", 2);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d(TAG, route.toString());*/
+
+                //db.POST(db.URL_REMOTE_SERVER + "/routes", );
+
             }
         });
         pictureButton.setOnClickListener(new View.OnClickListener() {
@@ -160,10 +212,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
      */
     private void startRoute(){
         if(map != null){
+            Log.d(TAG, "Start Route ------------");
             this.route = new Route();
             routeRecorder = new RouteRecorder(route, map, distanceText, heightText, locationManager);
-            routeRecorder.requestLocationUpdates(LocationManager.GPS_PROVIDER);
-//        routeRecorder.requestLocationUpdates(LocationManager.NETWORK_PROVIDER);
+            //routeRecorder.requestLocationUpdates(LocationManager.GPS_PROVIDER);
+            routeRecorder.requestLocationUpdates(LocationManager.NETWORK_PROVIDER);
 //            pictureButton.setClickable(true);
 //            noticeButton.setClickable(true);
         }else{
@@ -185,6 +238,23 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         Log.d(TAG, "Map Received");
         this.map = googleMap;
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (location != null)
+        {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(location.getLatitude(), location.getLongitude()), 17));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                    .zoom(17)                   // Sets the zoom
+                    .bearing(90)                // Sets the orientation of the camera to east
+                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        }
+
     }
 
     /**

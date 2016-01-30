@@ -42,15 +42,15 @@ public class RemoteDatabaseHelper {
 
     private static Context context;
     private static String TAG = "---------------- RemoteDatabaseHelper ";
-    private static final String URL_REMOTE_SERVER = "http://78.47.217.227/mountainbuddy/api/v1/";
-    private static final String URL_REMOTE_SERVER_ROUTES = "http://78.47.217.227/mountainbuddy/api/v1/routes";
+    public static final String URL_REMOTE_SERVER = "http://78.47.217.227/mountainbuddy/api/v1/";
+    public static final String URL_REMOTE_SERVER_ROUTES = "http://78.47.217.227/mountainbuddy/api/v1/routes";
     private static RequestQueue queue;
 
     private static final int ONE_MB = 1024 * 1024;
 
     private static Gson gson;
 
-    private RemoteDatabaseHelper (Context context){
+    public RemoteDatabaseHelper (Context context){
         this.context = context.getApplicationContext();
         gson = new Gson();
 //        queue = Volley.newRequestQueue(context);
@@ -59,8 +59,6 @@ public class RemoteDatabaseHelper {
         queue = new RequestQueue(cache, network);
         queue.start();
 
-        GET(URL_REMOTE_SERVER_ROUTES);
-//        new HttpAsyncTask().execute(URL_REMOTE_SERVER_ROUTES);
     }
 
     public static synchronized RemoteDatabaseHelper getInstance(Context context){
@@ -101,24 +99,6 @@ public class RemoteDatabaseHelper {
 
         // add it to the RequestQueue
         queue.add(getRequest);
-
-        /*StringBuilder result = new StringBuilder();
-
-        try {
-            URL url = new URL(urlToRead);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line;
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
-            }
-            rd.close();
-
-        } catch (Exception e) {
-            Log.d(TAG, e.toString());
-        }
-        return result.toString();*/
     }
 
     /**

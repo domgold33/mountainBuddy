@@ -2,6 +2,8 @@ package com.proto.buddy.mountainbuddyv2.activities;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -24,6 +26,9 @@ import com.proto.buddy.mountainbuddyv2.activities.Navigation_Drawer.NavigationDr
 import com.proto.buddy.mountainbuddyv2.activities.Route_Item_Screen.RouteItemFragment;
 import com.proto.buddy.mountainbuddyv2.conf.AppConfig;
 import com.proto.buddy.mountainbuddyv2.database.RemoteDatabaseHelper;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends ActionBarActivity
@@ -56,8 +61,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "Start App");
-
-        RemoteDatabaseHelper DB = RemoteDatabaseHelper.getInstance(getBaseContext());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -211,5 +214,4 @@ public class MainActivity extends ActionBarActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-
 }
