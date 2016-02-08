@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.proto.buddy.mountainbuddyv2.R;
-import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
+import com.proto.buddy.mountainbuddyv2.model.Route;
 
 
 /**
@@ -22,29 +22,21 @@ import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
  * create an instance of this fragment.
  */
 public class RouteItemFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-
 
     private OnFragmentInteractionListener mListener;
 
-    private MainActivity mainActiv;
+    private Route route;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment RouteItemFragment.
+     * @return A new instance of fragment bla.
      */
     // TODO: Rename and change types and number of parameters
     public static RouteItemFragment newInstance() {
         RouteItemFragment fragment = new RouteItemFragment();
         Bundle args = new Bundle();
-
         //fragment.setArguments(args);
         return fragment;
     }
@@ -57,10 +49,9 @@ public class RouteItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
+            route = (Route) getArguments().getSerializable("route");
+            Log.d("----Selected Route-----", route.toString());
         }
-
-        mainActiv = (MainActivity)this.getActivity();
     }
 
     @Override
@@ -68,15 +59,6 @@ public class RouteItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_route_item, container, false);
         setHasOptionsMenu(true);
-
-        TextView title = (TextView)rootView.findViewById(R.id.route_item_title);
-
-        TextView description = (TextView)rootView.findViewById(R.id.route_item_description);
-
-        title.setText(mainActiv.getRouteManager().getCurrent().getName());
-
-        description.setText(mainActiv.getRouteManager().getCurrent().getDescription());
-
         return rootView;
     }
 
@@ -91,7 +73,6 @@ public class RouteItemFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()

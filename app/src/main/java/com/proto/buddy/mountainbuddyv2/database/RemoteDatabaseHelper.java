@@ -50,7 +50,7 @@ public class RemoteDatabaseHelper {
 
     private static Gson gson;
 
-    public RemoteDatabaseHelper (Context context){
+    private RemoteDatabaseHelper (Context context){
         this.context = context.getApplicationContext();
         gson = new Gson();
 //        queue = Volley.newRequestQueue(context);

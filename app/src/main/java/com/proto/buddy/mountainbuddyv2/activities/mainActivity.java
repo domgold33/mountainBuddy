@@ -2,8 +2,6 @@ package com.proto.buddy.mountainbuddyv2.activities;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -19,21 +17,16 @@ import android.support.v4.widget.DrawerLayout;
 
 import com.proto.buddy.mountainbuddyv2.R;
 import com.proto.buddy.mountainbuddyv2.AppLogic.RouteManager;
-import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.RouteFragment;
+import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.RouteListFragment;
 import com.proto.buddy.mountainbuddyv2.activities.Create_Route_screen.CreateRouteFragment;
 import com.proto.buddy.mountainbuddyv2.activities.Main_screen.MainFragment;
 import com.proto.buddy.mountainbuddyv2.activities.Navigation_Drawer.NavigationDrawerFragment;
 import com.proto.buddy.mountainbuddyv2.activities.Route_Item_Screen.RouteItemFragment;
-import com.proto.buddy.mountainbuddyv2.conf.AppConfig;
-import com.proto.buddy.mountainbuddyv2.database.RemoteDatabaseHelper;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, MainFragment.OnFragmentInteractionListener,
-        RouteFragment.OnFragmentInteractionListener, CreateRouteFragment.OnFragmentInteractionListener,
+        RouteListFragment.OnFragmentInteractionListener, CreateRouteFragment.OnFragmentInteractionListener,
         RouteItemFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
@@ -65,46 +58,44 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        routeManager = new RouteManager(this.getApplicationContext());
+        routeManager = new RouteManager(this.getApplicationContext());
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
-
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-
         switch (position) {
             case 0:
                 Log.d(TAG, "************* Start MainFragment ***********");
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, MainFragment.newInstance(position + 1)).addToBackStack("Drawer_to_Start")
+                        .replace(R.id.container, MainFragment.newInstance(position + 1))
+                        .addToBackStack("Drawer_to_Start")
                         .commit();
                 break;
             case 1:
                 Log.d(TAG, "************* Start CreateRouteFragment ***********");
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, CreateRouteFragment.newInstance()).addToBackStack("Drawer_to_Create_Route")
+                        .replace(R.id.container, CreateRouteFragment.newInstance())
+                        .addToBackStack("Drawer_to_Create_Route")
                         .commit();
                 break;
             case 2:
-                Log.d(TAG, "************* Start RouteFragment ***********");
+                Log.d(TAG, "************* Start RouteListFragment ***********");
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, RouteFragment.newInstance()).addToBackStack("Drawer_to_List")
+                        .replace(R.id.container, RouteListFragment.newInstance())
+                        .addToBackStack("Drawer_to_List")
                         .commit();
                 break;
         }
-
-
     }
 
     public void onSectionAttached(int number) {
@@ -131,7 +122,6 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
-
         this.onSectionAttached(1);
         restoreActionBar();
     }
@@ -155,12 +145,10 @@ public class MainActivity extends ActionBarActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -173,7 +161,6 @@ public class MainActivity extends ActionBarActivity
     public void onFragmentInteraction(String id) {
 
     }
-
 
     /**
      * A placeholder fragment containing a simple view.
@@ -214,4 +201,5 @@ public class MainActivity extends ActionBarActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
 }

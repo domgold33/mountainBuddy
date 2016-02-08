@@ -34,7 +34,7 @@ import java.util.TimerTask;
 public class RouteRecorder implements LocationListener {
 
     private final static int MILLISECONDS_BETWEEN_UPDATES = 2000;
-    private final static int METERS_BETWEEN_UPDATES = 0;
+    private final static int METERS_BETWEEN_UPDATES = 5;
     private static final String TAG = "RouteRecorder";
 
     private TextView distanceText;

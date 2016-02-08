@@ -16,7 +16,6 @@ import android.widget.TabHost;
 import com.proto.buddy.mountainbuddyv2.R;
 import com.proto.buddy.mountainbuddyv2.AppLogic.RouteManager;
 import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.ListAdapter.RouteListAdapterAllRoutes;
-import com.proto.buddy.mountainbuddyv2.activities.Choose_Route_Screen.ListAdapter.RouteListAdapterMyRoutes;
 import com.proto.buddy.mountainbuddyv2.activities.Route_Item_Screen.RouteItemFragment;
 import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
 import com.proto.buddy.mountainbuddyv2.database.DatabaseHelper;
@@ -33,16 +32,7 @@ import java.util.ArrayList;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class RouteFragment extends Fragment{
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class RouteListFragment extends Fragment{
 
     private DatabaseHelper db;
 
@@ -67,12 +57,11 @@ public class RouteFragment extends Fragment{
 
     private RouteManager routeManager;
 
-
     private FragmentManager fragmentManager;
 
     // TODO: Rename and change types of parameters
-    public static RouteFragment newInstance() {
-        RouteFragment fragment = new RouteFragment();
+    public static RouteListFragment newInstance() {
+        RouteListFragment fragment = new RouteListFragment();
         Bundle args = new Bundle();
         //fragment.setArguments(args);
         return fragment;
@@ -82,7 +71,7 @@ public class RouteFragment extends Fragment{
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public RouteFragment() {
+    public RouteListFragment() {
     }
 
     @Override
@@ -122,16 +111,19 @@ public class RouteFragment extends Fragment{
         mListView_all.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                routeManager.setCurrent((Route) mAdapter_all.getItem(position));
-
+                Route currentRoute = (Route) mAdapter_all.getItem(position);
+                routeManager.setCurrent(currentRoute);
                 mainActivity.setRouteManager(routeManager);
+                RouteItemFragment newFragment = new RouteItemFragment();
+                Bundle args = new Bundle();
+                args.putSerializable("route", currentRoute);
+                newFragment.setArguments(args);
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, RouteItemFragment.newInstance()).addToBackStack("List_to_Item")
+                        .replace(R.id.container, newFragment)
+                        .addToBackStack("List_to_Item")
                         .commit();
             }
         });
-
-
         // Set the adapter
         mListView_my = (AbsListView) view.findViewById(R.id.list_my_routes);
         mListView_my.setAdapter(mAdapter_my);
@@ -142,18 +134,17 @@ public class RouteFragment extends Fragment{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 routeManager.setCurrent((Route) mAdapter_my.getItem(position));
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, RouteItemFragment.newInstance()).addToBackStack("List_to_Item")
+                        .replace(R.id.container, RouteItemFragment.newInstance())
+                        .addToBackStack("List_to_Item")
                         .commit();
             }
         });
-
         return view;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         mainActivity = ((MainActivity) activity);
         mainActivity.onSectionAttached(3);
         routeManager = mainActivity.getRouteManager();

@@ -1,6 +1,7 @@
 package com.proto.buddy.mountainbuddyv2.activities.Main_screen;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -18,7 +19,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +37,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.proto.buddy.mountainbuddyv2.R;
 import com.proto.buddy.mountainbuddyv2.AppLogic.RouteRecorder;
 import com.proto.buddy.mountainbuddyv2.activities.MainActivity;
-import com.proto.buddy.mountainbuddyv2.activities.RouteSave;
 import com.proto.buddy.mountainbuddyv2.database.DatabaseHelper;
 import com.proto.buddy.mountainbuddyv2.database.RemoteDatabaseHelper;
 import com.proto.buddy.mountainbuddyv2.model.Notice;
@@ -74,9 +76,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
     private OnFragmentInteractionListener mListener;
 
     private FragmentManager fragmentManager;
-
-    private final static int MILLISECONDS_BETWEEN_UPDATES = 2000;
-    private final static int METERS_BETWEEN_UPDATES = 10;
 
     private TextView distanceText;
     private TextView heightText;
@@ -151,14 +150,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
                 routeRecorder.cancelLocationUpdates();
                 startButton.setVisibility(View.VISIBLE);
                 stopButton.setVisibility(View.GONE);
-
                 stopRoute();
-
             }
         });
-
-
-
         pictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,8 +180,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         MapFragment mapFragment = (MapFragment) getActivity().getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        context = getActivity().getApplicationContext();
 
+        context = getActivity().getApplicationContext();
         fragmentManager = this.getActivity().getFragmentManager();
         if (getArguments() != null) {
         }
@@ -289,7 +283,37 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
      */
     private void stopRoute(){
         routeRecorder.cancelLocationUpdates();
-        saveRoute();
+        final Dialog dialog = new Dialog(this.getActivity());
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        if(this.route != null){
+            dialog.setContentView(R.layout.stop_dialog);
+            dialog.setTitle("Moechten Sie die Route speichern?");
+            Button btnSave = (Button)dialog.findViewById(R.id.save);
+            Button btnCancel = (Button)dialog.findViewById(R.id.cancel);
+
+            btnSave.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "Save");
+                    EditText routeName = (EditText) dialog.findViewById(R.id.routeName);
+                    EditText routeDescription = (EditText) dialog.findViewById(R.id.routeDescription);
+                    // set route name
+                    route.setName((routeName.getText().toString()));
+                    route.setDescription((routeDescription.getText().toString()));
+                    saveRoute();
+                    dialog.cancel();
+                }
+            });
+            btnCancel.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "Stop Route");
+                    dialog.cancel();
+                }
+            });
+        }
+        dialog.show();
     }
 
     @Override
@@ -299,8 +323,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        if (location != null)
-        {
+        if (location != null) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(location.getLatitude(), location.getLongitude()), 17));
 
@@ -311,9 +334,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
                     .tilt(40)                   // Sets the tilt of the camera to 30 degrees
                     .build();                   // Creates a CameraPosition from the builder
             map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
         }
-
     }
 
     /**
@@ -336,8 +357,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
      * für die Route eingegeben wurde.
      */
     private void saveRoute() {
-
-
         DatabaseHelper db = new DatabaseHelper(this.getActivity().getApplicationContext());
         db.getWritableDatabase();
 
@@ -345,8 +364,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
 
         this.route = routeRecorder.getRoute();
 
-        this.route.setName("Test route");
-        this.route.setDescription("Hello, im a new route");
+//        this.route.setName("Test route");
+//        this.route.setDescription("Hello, im a new route");
 
         // insert start point
         long startPointID = db.insertPoint(route.getStartPoint());
@@ -380,7 +399,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
             Log.d(TAG, "points.size() " + points.size());
             Log.d(TAG, "points " + points.toString());
             if(points.size() > 0){
-
                 for (Iterator<Point> it = points.iterator(); it.hasNext(); ) {
                     Point p = it.next();
                     Log.d(TAG, "point " + p.toString());
@@ -398,7 +416,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
                     Log.d(TAG, "Longitude: " + p.getLongitude());
                     Log.d(TAG, "Altitude: " + p.getAltitude());
                     Log.d(TAG, "Time: " + p.getTime());
-
                 }
             }
             ArrayList<Notice> notices = route.getListOfNotices();
@@ -441,7 +458,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback{
         } else {
             Log.d(TAG, "There is no other points and end point");
         }
-
+        map.clear();
     }
 
 }

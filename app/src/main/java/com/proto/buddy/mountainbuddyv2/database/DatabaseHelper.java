@@ -257,7 +257,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public ArrayList getAllTableName() {
         SQLiteDatabase db = this.getWritableDatabase();
-        ArrayList<String> arrTblNames = new ArrayList<String>();
+        ArrayList<String> arrTblNames = new ArrayList<>();
         Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
         if (c.moveToFirst()) {
             while ( !c.isAfterLast() ) {
